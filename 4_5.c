@@ -17,7 +17,7 @@ List Delete(List L, Position P);
 
 int main()
 {
-	freopen("data4_5.in", "r", stdin);
+	freopen("data_4_5.in", "r", stdin);
 	List L;
 	ElementType X;
 	Position P, tmp;
