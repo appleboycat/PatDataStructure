@@ -28,15 +28,26 @@ int main()
 	while (N--) {
 		scanf("%d", &X);
 		L = Insert(L, X, L);
+		//for (P = L; P; P = P->Next) printf("%p: %d\t", P, P->Data);
+		//printf("\n");
 		if (L == ERROR) printf("Wrong Answer\n");
 	}
 	scanf("%d", &N);
 	while (N--) {
+	    //Position PO;
+       // for (PO = L; PO; PO = PO->Next) printf("%p: %d\t", PO, PO->Data);
+		//printf("\n");
+
+
 		scanf("%d", &X);
 		P = Find(L, X);
+        //printf("find X:%d  addr:%p\n",X,P);
+
+
 		if (P == ERROR)
 			printf("Finding Error: %d is not in.\n", X);
 		else {
+           // printf("delete: L= %p, P= %p\n",L,P);
 			L = Delete(L, P);
 			printf("%d is found and deleted.\n", X);
 			if (L == ERROR)
@@ -72,152 +83,95 @@ Position Find(List L, ElementType X)
     }
     return ERROR;
 }
+
+
 List Insert(List L, ElementType X, Position P)
 {
-    PtrToLNode ptr = L, tmp = NULL;
-    if(P == NULL)
+    PtrToLNode tmp = NULL;
+    if(!L)
     {
-        tmp = (PtrToLNode)malloc(sizeof(struct LNode));
-        tmp->Data = X;
-        tmp->Next = NULL;
-        if(ptr == NULL)
+        if(!P)
         {
+            tmp = (PtrToLNode)malloc(sizeof(struct LNode));
+            tmp->Data = X;
+            tmp->Next = NULL;
             L = tmp;
-        }
-        else
-        {
-            while(ptr->Next != NULL)
-            {
-                ptr = ptr->Next;
-            }
-            ptr->Next = tmp;
-        }
-        return L;
-    }
-    else
-    {
-        if(ptr != NULL)
-        {
-            if(ptr == P)
-            {
-                tmp = (PtrToLNode)malloc(sizeof(struct LNode));
-                tmp->Data = X;
-                tmp->Next = P;
-                ptr = tmp;
-                return ptr;
-            }
-            else
-            {
-                while ((ptr->Next != NULL) && (ptr->Next != P))ptr = ptr->Next;
-                if (ptr->Next == P)
-                {
-                    tmp = (PtrToLNode)malloc(sizeof(struct LNode));
-                    tmp->Data = X;
-                    tmp->Next = NULL;
-                    ptr->Next = tmp;
-                    tmp->Next = P;
-                    return L;
-                }
-                else
-                {
-                    printf("Wrong Position for Insertion\n");
-                    return ERROR;
-                }
-            }
-
+            return L;
         }
         else
         {
             printf("Wrong Position for Insertion\n");
             return ERROR;
         }
-
     }
-
-    /*
-	if (L == NULL)
-	{
-		if (P != NULL)
-		{
-			printf("Wrong Position for Insertion\n");
-			return ERROR;
-		}
-		else
-		{
-			PtrToLNode tmp = (PtrToLNode)malloc(sizeof(struct LNode));
-			tmp->Data = X;
-			tmp->Next = NULL;
-            printf("xxx\n");
-			return tmp;
-		}
-	}
-	else
-	{
-		PtrToLNode ptr = L;
-		PtrToLNode tmp = NULL;
-		if (P != NULL)
-		{
-		    if( P == tmp )
+    else
+    {
+        PtrToLNode ptr = L, pre = NULL ;
+        if(ptr == P)
+        {
+            tmp = (PtrToLNode)malloc(sizeof(struct LNode));
+            tmp->Data = X;
+            tmp->Next = P;
+            L = tmp;
+            return L;
+        }
+        else
+        {
+            while( (ptr->Next)&&(ptr->Next != P) )
             {
+                ptr = ptr->Next;
+            }
+            if(ptr->Next == P)
+            {
+                tmp = (PtrToLNode)malloc(sizeof(struct LNode));
+                tmp->Data = X;
+                tmp->Next = P;
+                ptr->Next = tmp;
+                return L;
 
             }
-			while ((ptr->Next != NULL) && (ptr->Next != P))ptr = ptr->Next;
-			if (ptr->Next == P)
-			{
-				tmp = (PtrToLNode)malloc(sizeof(struct LNode));
-				tmp->Data = X;
-				tmp->Next = NULL;
-				ptr->Next = tmp;
-				tmp->Next = P;
-				return L;
-			}
-			else
-			{
-				printf("Wrong Position for Insertion\n");
-				return ERROR;
-			}
-		}
-		else
-		{
-			while (ptr->Next != NULL)ptr = ptr->Next;
-			tmp = (PtrToLNode)malloc(sizeof(struct LNode));
-			tmp->Data = X;
-			tmp->Next = NULL;
-			ptr->Next = tmp;
-			return L;
-		}
-	}*/
+            else
+            {
+                printf("Wrong Position for Insertion\n");
+                return ERROR;
+            }
+        }
+    }
 }
 List Delete(List L, Position P)
 {
     PtrToLNode ptr = L;
-    if( (P == NULL)||(L == NULL) )
+    if(!ptr || !P)
     {
         printf("Wrong Position for Deletion\n");
         return ERROR;
     }
     else
     {
-        if( ptr == P)
+        if(ptr == P)
         {
-            ptr->Next = P->Next;
-            return ptr;
-        }
-        while( (ptr->Next != NULL)&&(ptr->Next != P) )
-        {
-            ptr = ptr->Next;
-        }
-        if( ptr->Next == P)
-        {
-             PtrToLNode tmp = ptr;
-             ptr->Next = P->Next;
-             free(tmp);
+            L = ptr->Next;
+            free(ptr);
+            return L;
         }
         else
         {
-            printf("Wrong Position for Deletion\n");
-            return ERROR;
+            while( (ptr->Next != NULL)&&(ptr->Next != P) )
+            {
+                ptr = ptr->Next;
+            }
+            if( ptr->Next == P)
+            {
+                 ptr->Next = P->Next;
+                 free(P);
+                 return L;
+            }
+            else
+            {
+                printf("Wrong Position for Deletion\n");
+                return ERROR;
+            }
+
         }
     }
-	return L;
 }
