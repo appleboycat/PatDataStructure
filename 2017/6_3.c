@@ -1,14 +1,14 @@
 #include<stdio.h>
 #include<stdlib.h>
-#define MaxSize 10
+#define MaxSize 11
 typedef struct ArcNd
 {
     int adjvex;
     struct ArcNd* nextarc;
 }ArcNode;
-
 typedef struct
 {
+    //char data;
     struct ArcNd* firstarc;
 }VNode;
 typedef struct
@@ -23,17 +23,22 @@ void BFS(AGraph* ag, int j);
 
 int main()
 {
-    freopen("6_3.in", "r", stdin);
+
     AGraph* pag = (AGraph*)malloc(sizeof(AGraph));
+    printf("sizeof(AGraph) %d\n",sizeof(AGraph));
+    freopen("6_3.in", "r", stdin);
     scanf("%d %d", &(pag->n), &(pag->e));
     int i = 0;
-	for( i = 0; i < pag->n; i++ )
+	for( i = 1; i <= pag->n; i++ )
 		pag->adjlist[i].firstarc = NULL;
 	i = 0;
     while(i<(pag->e))
     {
         int s, d;
         scanf("%d %d", &s, &d);
+        printf("%d %d\n", s, d);
+        s;
+        d;
         ArcNode* arc1 = malloc(sizeof(ArcNode));
         arc1->adjvex = d;
         arc1->nextarc = NULL;
@@ -42,7 +47,10 @@ int main()
         arc2->adjvex = s;
         arc2->nextarc = NULL;
 
+
         ArcNode** p = &(pag->adjlist[s].firstarc);
+		//printf("**p %p\n", **p);
+
         if(*p == NULL)
         {
             *p = arc1;
@@ -97,19 +105,21 @@ int main()
         i++;
     }
 
-    /*i = 0;
-    while(i<(pag->n))
+    i = 1;
+    while(i<=(pag->n))
     {
         ArcNode* p = pag->adjlist[i].firstarc;
+        printf("i %d: ", i);
         while(p)
         {
-            printf("%d\n", p->adjvex);
+            printf(" %d", p->adjvex);
             p = p->nextarc;
         }
+        printf("\n");
         i++;
-    }*/
+    }
 
-    for(i = 0; i<pag->n; i++)
+    for(i = 1; i <= pag->n; i++)
     {
         if(visit[i] == 0)
         {
@@ -118,8 +128,8 @@ int main()
             printf(" }\n");
         }
     }
-    for(i = 0; i<MaxSize; i++)visit[i] = 0;
-    for(i = 0; i<pag->n; i++)
+    for(i = 1; i <= MaxSize; i++)visit[i] = 0;
+    for(i = 1; i <= pag->n; i++)
     {
         if(visit[i] == 0)
         {
