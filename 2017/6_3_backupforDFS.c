@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
-#define MaxSize 10000
+#define MaxSize 11
 typedef struct ArcNd
 {
     int adjvex;
@@ -18,11 +18,15 @@ typedef struct
 }AGraph;
 
 static int visit[MaxSize] = {0};
+void DFS(AGraph* ag, int j);
 void BFS(AGraph* ag, int j);
+
 int main()
 {
+
     AGraph* pag = (AGraph*)malloc(sizeof(AGraph));
-    freopen("6_3_1.in", "r", stdin);
+    printf("sizeof(AGraph) %d\n",sizeof(AGraph));
+    freopen("6_3.in", "r", stdin);
     scanf("%d %d", &(pag->n), &(pag->e));
     int i = 0;
 	for( i = 1; i <= pag->n; i++ )
@@ -32,6 +36,9 @@ int main()
     {
         int s, d;
         scanf("%d %d", &s, &d);
+        printf("%d %d\n", s, d);
+        s;
+        d;
         ArcNode* arc1 = malloc(sizeof(ArcNode));
         arc1->adjvex = d;
         arc1->nextarc = NULL;
@@ -42,6 +49,7 @@ int main()
 
 
         ArcNode** p = &(pag->adjlist[s].firstarc);
+		//printf("**p %p\n", **p);
 
         if(*p == NULL)
         {
@@ -97,8 +105,34 @@ int main()
         i++;
     }
 
+    i = 1;
+    while(i<=(pag->n))
+    {
+        ArcNode* p = pag->adjlist[i].firstarc;
+        printf("i %d: ", i);
+        while(p)
+        {
+            printf(" %d", p->adjvex);
+            p = p->nextarc;
+        }
+        printf("\n");
+        i++;
+    }
+
     for(i = 1; i <= pag->n; i++)
     {
+        if(visit[i] == 0)
+        {
+            printf("{");
+            DFS(pag, i);
+            printf(" }\n");
+        }
+    }
+    //for(i = 1; i <= MaxSize; i++)visit[i] = 0;
+    //visit[] = {0};
+    for(i = 1; i <= pag->n; i++)
+    {
+        //printf("¡¾%d¡¿-----\n", i);
         int j;
         for(j = 1; j <= MaxSize; j++)visit[j] = 0;
         BFS(pag, i);
@@ -107,10 +141,13 @@ int main()
         {
             if(visit[j])
             {
+                //printf("%d ",j);
                 num++;
             }
         }
-        printf("%d: %.2f%%\n", i, (double)num/pag->n * 100);
+        printf("%d: %.2f%%\n", i, (float)num/10 * 100);
+
+        //printf("-----\n");
     }
 
 
@@ -118,21 +155,43 @@ int main()
     return 0;
 }
 
+void DFS(AGraph* ag, int j)
+{
+    visit[j] = 1;
+    printf(" %d", j);
+    ArcNode* p = ag->adjlist[j].firstarc;
+    while(p != NULL)
+    {
+        if(visit[p->adjvex] == 0)
+        {
+            DFS(ag, p->adjvex);
+        }
+        p = p->nextarc;
+    }
+}
 void BFS(AGraph* ag, int j)
 {
     int que[MaxSize];
     int front = 0;
     int rear = 0;
 
+    //printf(" %d", j);
     visit[j] = 1;
     rear = (rear + 1) % MaxSize;
     que[rear] = j;
 
     int depth = 0;
+
+
+    int qsize = 0;
+    // (rear - front + MaxSize) % MaxSize;
+    //printf("qsize %d\n", qsize);
     while((front != rear)&&(depth < 6))
     {
         depth++;
+        //printf("depth:%d\n", depth);
         int num = (rear - front + MaxSize) % MaxSize;
+
         while(num--)
         {
             front = (front + 1) % MaxSize;
@@ -144,9 +203,11 @@ void BFS(AGraph* ag, int j)
                 {
                     rear = (rear+1)%MaxSize;
                     que[rear] = p->adjvex;
+                    //printf("       eque %d\n", p->adjvex);
                     visit[p->adjvex] = 1;
                 }
                 p = p->nextarc;
+
             }
         }
     }
