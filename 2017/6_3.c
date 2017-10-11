@@ -128,15 +128,26 @@ int main()
             printf(" }\n");
         }
     }
-    for(i = 1; i <= MaxSize; i++)visit[i] = 0;
+    //for(i = 1; i <= MaxSize; i++)visit[i] = 0;
+    //visit[] = {0};
     for(i = 1; i <= pag->n; i++)
     {
-        if(visit[i] == 0)
+        printf("-----\n");
+        int j;
+        for(j = 1; j <= MaxSize; j++)visit[j] = 0;
+        BFS(pag, i);
+        int num = 0;
+        for(j = 1; j<=(pag->n); j++)
         {
-            printf("{");
-            BFS(pag, i);
-            printf(" }\n");
+            if(visit[j])
+            {
+                printf("%d ",j);
+                num++;
+            }
         }
+        printf("[%d] num:%d\n", i, num);
+
+        printf("-----\n");
     }
 
 
@@ -164,14 +175,16 @@ void BFS(AGraph* ag, int j)
     int front = 0;
     int rear = 0;
 
-    printf(" %d", j);
+    //printf(" %d", j);
     visit[j] = 1;
     rear = (rear+1)%MaxSize;
     que[rear] = j;
 
-    while(front != rear)
+    int depth = 1;
+
+    while((front != rear)&&(depth <= 7))
     {
-        front = (front+1)%MaxSize;
+        front = (front + 1)%MaxSize;
         int k = que[front];
         ArcNode* p = ag->adjlist[k].firstarc;
         while(p != NULL)
@@ -180,12 +193,13 @@ void BFS(AGraph* ag, int j)
             {
                 rear = (rear+1)%MaxSize;
                 que[rear] = p->adjvex;
-                printf(" %d", p->adjvex);
+                //printf(" %d", p->adjvex);
                 visit[p->adjvex] = 1;
             }
 
-            p = p->nextarc;
+            p = p->nextarc;depth++;
         }
+
     }
 
 }
