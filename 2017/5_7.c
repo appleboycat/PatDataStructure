@@ -26,13 +26,43 @@ int main()
         printf("%d: %d \n", i, R[i]);
         i++;
     }
+    sift(R, 1, 5);
+    i = 1;
+    while(i <= Rlen)
+    {
+        printf("%d: %d \n", i, R[i]);
+        i++;
+    }
 
 
 	fclose(stdin);
 	return 0;
 
 }
-void sift(int* R, int i, int m)
+void sift(int* R, int k, int m)
 {
+    int i = k;
+    int j = 2 * i;
+
+    while( j <= m )
+    {
+        if(R[j] > R[j+1])
+        {
+            j++;
+        }
+        if(R[i] < R[j])
+        {
+            break;
+        }
+        else
+        {
+            int tmp = R[i];
+            R[i] = R[j];
+            R[j] = tmp;
+            i = j;
+            j = i * 2;
+        }
+    }
+
 
 }
